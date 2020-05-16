@@ -7,7 +7,7 @@ public class gunScript : MonoBehaviour {
     public float range = 100f;
     public float shootingSpeed = 10f;
 
-    public Camera fpsCam;
+    public Transform fpsCam;
     public ParticleSystem muzzleFlash;
     public Rigidbody bullet;
 
@@ -18,12 +18,12 @@ public class gunScript : MonoBehaviour {
         }
     }
 
-    void shoot () {
+    void shoot() {
         muzzleFlash.Play();
         RaycastHit hit;
         Rigidbody newBullet;
-        newBullet = Instantiate(bullet, fpsCam.transform.position, Quaternion.Euler(fpsCam.transform.eulerAngles.x,fpsCam.transform.eulerAngles.y,fpsCam.transform.eulerAngles.z));
-        newBullet.AddForce(transform.forward * shootingSpeed);
+        newBullet = Instantiate(bullet, fpsCam.position, Quaternion.Euler(fpsCam.transform.eulerAngles.x,fpsCam.transform.eulerAngles.y,fpsCam.transform.eulerAngles.z));
+        newBullet.AddForce(fpsCam.transform.forward * shootingSpeed);
         Destroy(newBullet.gameObject,5);
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range)) {
 
