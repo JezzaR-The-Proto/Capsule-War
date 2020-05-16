@@ -24,6 +24,7 @@ public class gunScript : MonoBehaviour {
         Rigidbody newBullet;
         newBullet = Instantiate(bullet, fpsCam.transform.position, Quaternion.Euler(fpsCam.transform.eulerAngles.x,fpsCam.transform.eulerAngles.y,fpsCam.transform.eulerAngles.z));
         newBullet.AddForce(transform.forward * shootingSpeed);
+        Destroy(newBullet.gameObject,5);
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range)) {
 
             Target target = hit.transform.GetComponent<Target>();
