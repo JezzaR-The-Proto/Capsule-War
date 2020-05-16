@@ -6,6 +6,12 @@ public class BulletScript : MonoBehaviour
 {
     public LayerMask ground;
     public Rigidbody bullet;
+    public Collider player;
+    public HealthBar HealthBar;
+
+    void Start() {
+         Physics.IgnoreCollision(GetComponent<Collider>(), player);
+    }
 
     void OnCollisionEnter(Collision other) {
         int layer = other.gameObject.layer;
