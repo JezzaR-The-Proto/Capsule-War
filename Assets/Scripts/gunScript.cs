@@ -9,7 +9,6 @@ public class gunScript : MonoBehaviour {
 
     public Transform fpsCam;
     public ParticleSystem muzzleFlash;
-    public Rigidbody bullet;
 
     // Update is called once per frame
     void Update() {
@@ -21,12 +20,7 @@ public class gunScript : MonoBehaviour {
     void shoot() {
         muzzleFlash.Play();
         RaycastHit hit;
-        Rigidbody newBullet;
-        newBullet = Instantiate(bullet, fpsCam.position, Quaternion.Euler(fpsCam.transform.eulerAngles.x,fpsCam.transform.eulerAngles.y,fpsCam.transform.eulerAngles.z));
-        newBullet.AddForce(fpsCam.transform.forward * shootingSpeed);
-        Destroy(newBullet.gameObject,5);
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range)) {
-
             Target target = hit.transform.GetComponent<Target>();
             if (target != null) {
                 target.TakeDamage(damage);
