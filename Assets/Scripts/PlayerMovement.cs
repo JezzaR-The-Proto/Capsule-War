@@ -46,6 +46,11 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 normalVector = Vector3.up;
     private Vector3 wallNormalVector;
 
+    //Health
+    public int health;
+    public int currentHealth;
+    public HealthBar healthBar;
+
     void Awake() {
         rb = GetComponent<Rigidbody>();
     }
@@ -54,16 +59,24 @@ public class PlayerMovement : MonoBehaviour {
         playerScale =  transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        health = 100;
+        currentHealth = health;
+        healthBar.SetMaxHealth(health);
+        healthBar.SetHealth(health);
     }
 
     
     private void FixedUpdate() {
-        Movement();
+        if (PauseScript.IsGamePaused) {} else {
+            Movement();
+        }
     }
 
     private void Update() {
-        MyInput();
-        Look();
+        if (PauseScript.IsGamePaused) {} else {
+            MyInput();
+            Look();
+        }
     }
 
     /// <summary>
@@ -73,13 +86,15 @@ public class PlayerMovement : MonoBehaviour {
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
         jumping = Input.GetButton("Jump");
-        crouching = Input.GetKey(KeyCode.LeftControl);
       
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftControl))
             StartCrouch();
         if (Input.GetKeyUp(KeyCode.LeftControl))
             StopCrouch();
+        if (Input.GetKeyDown(KeyCode.R))
+            currentHealth -= 5;
+            healthBar.SetHealth(currentHealth);
     }
 
     private void StartCrouch() {
