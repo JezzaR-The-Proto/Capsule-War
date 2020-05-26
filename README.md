@@ -1,4 +1,5 @@
 # Capsule War
-fps game
-## Made in Unity
-epic game
+A simple game about the war between the default capsule and default cylinder objects.
+## Development Timeline:
+[click here](https://trello.com/b/fVqipD1m/capsule-war)
+### Made in Unity
