@@ -4,7 +4,6 @@ public class EnemyAI : MonoBehaviour {
 
     private NavMeshAgent nav;
     private Transform player;
-    public GameObject PlayerObject;
     private Transform enemyTransform;
     private Vector3 PlayerPos;
     private Vector3 EnemyPos;
@@ -27,7 +26,6 @@ public class EnemyAI : MonoBehaviour {
             nav.SetDestination(PlayerPos);
         } else {
             nav.SetDestination(EnemyPos);
-            PlayerObject.GetComponent<Target>().TakeDamage(20);
             enemyTransform.rotation = Quaternion.LookRotation(newDirection);
         }
     }
