@@ -2,6 +2,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -46,6 +47,17 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 normalVector = Vector3.up;
     private Vector3 wallNormalVector;
 
+    //Health
+    public int health;
+    public int currentHealth;
+    public HealthBar healthBar;
+
+    //Sprint Charge
+    public float TotalSprint;
+    public float CurrentSprint;
+    public SprintBar SprintBar;
+    public Slider SprintSlider;
+
     void Awake() {
         rb = GetComponent<Rigidbody>();
     }
@@ -54,16 +66,43 @@ public class PlayerMovement : MonoBehaviour {
         playerScale =  transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        health = 100;
+        currentHealth = health;
+        healthBar.SetMaxHealth(health);
+        healthBar.SetHealth(health);
+        TotalSprint = 100f;
+        CurrentSprint = TotalSprint;
+        SprintBar.SetMaxHealth(TotalSprint);
+        SprintBar.SetHealth(TotalSprint);
     }
 
     
     private void FixedUpdate() {
-        Movement();
+        if (PauseScript.IsGamePaused) {} else {
+            Movement();
+        }
     }
 
     private void Update() {
-        MyInput();
-        Look();
+        if (PauseScript.IsGamePaused) {} else {
+            MyInput();
+            Look();
+            if (sprinting == true) {
+                if (CurrentSprint == 0f || CurrentSprint < 0f) {
+                    CurrentSprint = 0f;
+                    return;
+                }
+                CurrentSprint -= 0.2f;
+                SprintBar.SetHealth(CurrentSprint);
+            } else {
+                if (CurrentSprint == TotalSprint || CurrentSprint > TotalSprint) {
+                    CurrentSprint = TotalSprint;
+                    return;
+                }
+                CurrentSprint += 0.1f;
+                SprintBar.SetHealth(CurrentSprint);
+            }
+        }
     }
 
     /// <summary>
@@ -73,13 +112,16 @@ public class PlayerMovement : MonoBehaviour {
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
         jumping = Input.GetButton("Jump");
-        crouching = Input.GetKey(KeyCode.LeftControl);
       
         //Crouching
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
             StartCrouch();
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
             StopCrouch();
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+            StartSprint();
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+            StopSprint();
     }
 
     private void StartCrouch() {
@@ -265,6 +307,18 @@ public class PlayerMovement : MonoBehaviour {
 
     private void StopGrounded() {
         grounded = false;
+    }
+
+    private void StartSprint() {
+        Debug.Log("Sprint Started");
+        maxSpeed = maxSpeed * 2;
+        sprinting = true;
+    }
+
+    private void StopSprint() {
+        Debug.Log("Sprint Stopped");
+        maxSpeed = maxSpeed / 2;
+        sprinting = false;
     }
     
 }
