@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour {
 
@@ -7,14 +9,16 @@ public class EnemyAI : MonoBehaviour {
     private Transform enemyTransform;
     private Vector3 PlayerPos;
     private Vector3 EnemyPos;
+    public EnemyGunScript GunScript;
+    public float ShootInterval;
 
-    void Start () {
+    void Start() {
         nav = GetComponent<NavMeshAgent>();
         enemyTransform = GetComponent<Transform>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    void Update () { 
+    void Update() { 
         PlayerPos = player.position;
         EnemyPos = enemyTransform.position;
         float dist = Vector3.Distance(EnemyPos, PlayerPos);
@@ -26,6 +30,7 @@ public class EnemyAI : MonoBehaviour {
             nav.SetDestination(PlayerPos);
         } else {
             nav.SetDestination(EnemyPos);
+            GunScript.Shoot(ShootInterval);
             enemyTransform.rotation = Quaternion.LookRotation(newDirection);
         }
     }

@@ -5,32 +5,32 @@ public class gunScript : MonoBehaviour {
 
     public float damage = 10f;
     public float range = 100f;
-    public float shootingSpeed = 10f;
     public int ClipSize = 20;
     public int CurrentBullets = 20;
-    private float LastReloadTime = 0f;
-    private float LastShootTime = 0f;
-
+    public float ReloadTime = 1;
     public Transform fpsCam;
     public ParticleSystem muzzleFlash;
+    public Animator Animator;
+    private bool IsReloading = false;
 
     // Update is called once per frame
     void Update() {
         if(Input.GetButtonDown("Fire1")){
+            if (IsReloading) {
+                return;
+            }
             Shoot();
         }
         if(Input.GetKeyDown(KeyCode.R)) {
-            Reload();
+            StartCoroutine(Reload());
+            return;
         }
     }
 
     void Shoot() {
-        if (Time.time - LastShootTime < 0.1f) {
-            return;
-        } else if (CurrentBullets < 1) {
+        if (CurrentBullets < 1) {
             return;
         } else {
-            LastShootTime = Time.time;
             CurrentBullets -= 1;
             muzzleFlash.Play();
             RaycastHit hit;
@@ -43,13 +43,12 @@ public class gunScript : MonoBehaviour {
         }
     }
 
-    void Reload() {
-        if (Time.time - LastReloadTime > 1f) {
-            LastReloadTime = Time.time;
-            CurrentBullets = ClipSize;
-        } else {
-            return;
-        }
-        
+    IEnumerator Reload() {
+        IsReloading = true;
+        Animator.SetBool("Reloading",true);
+        yield return new WaitForSeconds(ReloadTime);
+        CurrentBullets = ClipSize;
+        Animator.SetBool("Reloading",false);
+        IsReloading = false;
     }
 }

@@ -21,12 +21,10 @@ public class LoadCrosshairScript : MonoBehaviour
         CrosshairArray = Resources.LoadAll("Crosshairs", typeof(Sprite));
         StreamReader sr = File.OpenText(SettingsFile);
         SettingsString = sr.ReadLine();
-        Debug.Log(SettingsString);
         while (SettingsString != null) {
             AllSettings.Add((string)SettingsString);
             SettingsString = sr.ReadLine();
         }
-        Debug.Log(AllSettings[0]);
         IsParseable = Int32.TryParse(AllSettings[0], out ArrayIndex);
         if (IsParseable) {
             Crosshair.sprite = (Sprite)CrosshairArray[ArrayIndex];
