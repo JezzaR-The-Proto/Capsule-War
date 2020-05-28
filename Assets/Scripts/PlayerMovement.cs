@@ -90,6 +90,8 @@ public class PlayerMovement : MonoBehaviour {
             if (sprinting == true) {
                 if (CurrentSprint == 0f || CurrentSprint < 0f) {
                     CurrentSprint = 0f;
+                    sprinting = false;
+                    maxSpeed = maxSpeed / 2;
                     return;
                 }
                 CurrentSprint -= 0.2f;
@@ -310,13 +312,11 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void StartSprint() {
-        Debug.Log("Sprint Started");
         maxSpeed = maxSpeed * 2;
         sprinting = true;
     }
 
     private void StopSprint() {
-        Debug.Log("Sprint Stopped");
         maxSpeed = maxSpeed / 2;
         sprinting = false;
     }
