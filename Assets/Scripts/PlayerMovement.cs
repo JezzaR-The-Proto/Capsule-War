@@ -3,6 +3,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -51,12 +52,17 @@ public class PlayerMovement : MonoBehaviour {
     public int health;
     public int currentHealth;
     public HealthBar healthBar;
+    public Slider HealthSlider;
+    private bool Dead;
 
     //Sprint Charge
     public float TotalSprint;
     public float CurrentSprint;
     public SprintBar SprintBar;
     public Slider SprintSlider;
+
+    //Death Animation
+    public Animator Animator;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -78,13 +84,18 @@ public class PlayerMovement : MonoBehaviour {
 
     
     private void FixedUpdate() {
-        if (PauseScript.IsGamePaused) {} else {
+        if (PauseScript.IsGamePaused || Dead) {} else {
             Movement();
         }
     }
 
     private void Update() {
-        if (PauseScript.IsGamePaused) {} else {
+        currentHealth = (int)HealthSlider.value;
+        if (currentHealth < 1) {
+            Dead = true;
+            Animator.SetBool("IsDead",true);
+        }
+        if (PauseScript.IsGamePaused || Dead) {} else {
             MyInput();
             Look();
             if (sprinting == true) {
@@ -103,6 +114,13 @@ public class PlayerMovement : MonoBehaviour {
                 }
                 CurrentSprint += 0.1f;
                 SprintBar.SetHealth(CurrentSprint);
+            }
+        }
+        if (Dead) {
+            if (Input.GetKeyUp(KeyCode.Space)) {
+                SceneManager.LoadScene("Level1");
+                Animator.SetBool("IsDead",false);
+                Dead = false;
             }
         }
     }
